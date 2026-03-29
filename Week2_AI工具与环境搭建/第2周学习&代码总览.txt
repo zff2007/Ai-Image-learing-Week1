@@ -1,0 +1,10 @@
+图片 AI 开发助理_第 2 周代码库
+核心技能：Git/GitHub 代码管理 + NumPy/Pandas 数据处理 + PyTorch (CPU) 基础 + Linux 基础命令
+各 Day 核心产出：
+Day8：Git 本地配置脚本 + 命令笔记（本地仓库初始化 / 代码提交）
+Day9：GitHub 远程关联脚本 + 项目 README（远程仓库推送 / 文档编写）
+Day10：NumPy 入门脚本（数组运算 + 图片与数组互转）
+Day11：Pandas 入门脚本（Excel 读取 + 图片数据集统计）
+Day12：PyTorch (CPU) 验证脚本 + Linux 基础命令实操
+Day13：PyTorch 张量脚本 + ResNet18 模型加载与结构打印
+Day14：Week2 代码复盘脚本 + Linux 虚拟环境配置
