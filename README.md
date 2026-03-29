@@ -18,7 +18,8 @@
 - **深度学习框架**：PyTorch（CPU版）
 - **系统基础**：Linux 常用命令
 
-##  项目结构
+## 项目结构
+```markdown
 Ai-Image-learing-Week1/
 ├─ Day1_Python基础语法/          # Python变量、循环、判断、列表/字典基础
 ├─ Day2_PIL基础操作/             # PIL图片读取、保存、尺寸调整、格式转换
@@ -26,17 +27,17 @@ Ai-Image-learing-Week1/
 ├─ Day4_os文件路径操作/           # os库目录遍历、文件重命名、路径拼接
 ├─ Day5_数据集预处理工具/         # 自动化图片批量处理工具（重命名/格式统一/尺寸调整）
 ├─ Day6_查漏补缺_代码优化/        # 第1周代码bug修复、性能优化、注释完善
-└─ Week2_AI工具与环境搭建/
-   ├─ Day8_Git本地仓库配置/       # Git全局配置、本地仓库初始化、代码提交
-   ├─ Day9_GitHub远程仓库实战/    # GitHub仓库创建、远程关联、代码推送、项目README
-   ├─ Day10_NumPy图片数组处理/    # NumPy数组运算、图片与数组互转、像素查看
-   ├─ Day11_Pandas图片数据统计/   # Pandas数据读取、图片数据集信息统计
-   ├─ Day12_PyTorch安装/          # PyTorch CPU版安装验证、Linux基础命令
-   ├─ Day13_PyTorch模型/          # PyTorch张量操作、ResNet18预训练模型加载与
-   结构打印
-   └─ 第2周学习&代码总览.txt       # 第2周学习与代码产出汇总
+├─ Week2_AI工具与环境搭建/        # AI工具与环境搭建
+│  ├─ Day8_Git本地仓库配置/       # Git全局配置、本地仓库初始化、代码提交
+│  ├─ Day9_GitHub远程仓库实战/    # GitHub仓库创建、远程关联、代码推送、项目README
+│  ├─ Day10_NumPy图片数组处理/    # NumPy数组运算、图片与数组互转、像素查看
+│  ├─ Day11_Pandas图片数据统计/   # Pandas数据读取、图片数据集信息统计
+│  ├─ Day12_PyTorch安装/          # PyTorch CPU版安装验证、Linux基础命令
+│  ├─Day13_PyTorch模型/          # PyTorch张量操作、ResNet预训练模型加载与结构打印
+|  └─ 第2周学习&代码总览.txt         # 第2周学习与代码产出汇总
 ├─ README.md                     # 项目总览文档
 └─ 第1周学习&代码总览.txt         # 第1周学习与代码产出汇总
+
 
 ##  核心功能
 ### 第 1 周：Python+PIL 图片处理基础
