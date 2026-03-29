@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-img_folder = r"C:\Users\sally\Desktop\ceshi"
+img_folder = r"path"
 #支持的图片格式
 img_formats = [".jpg",".jpeg",".png",".bmp",".gif"]
 

@@ -3,9 +3,9 @@ from PIL import Image
 
 #=====================基础配置=========================
 # 原始图片路径
-IMG_PATH = r"C:\Users\sally\Desktop\ceshi\1.jpg"
+IMG_PATH = r"path1"
 # 保存图片的文件夹
-SAVE_DIR = r"C:\Users\sally\Desktop\ceshi"
+SAVE_DIR = r"path2"
 
 #======================1.图片转换为NumPy数组=====================
 
