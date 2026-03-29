@@ -1,0 +1,24 @@
+# Git本地仓库配置与核心命令
+# 配置环境：Windows/Git Bash（Linux/Mac终端通用）
+
+## 一、Git基础配置（首次使用必须执行，配置用户名和邮箱，关联GitHub）
+git config --global user.name "你的GitHub用户名"  # 全局配置，所有仓库生效
+git config --global user.email "你的GitHub绑定邮箱"
+git config --global --list  				# 验证配置是否成功，打印配置信息
+
+## 二、本地仓库初始化（在项目根目录执行）
+cd 你的项目根目录路径  
+git init  		# 初始化本地Git仓库，生成隐藏的.git文件夹
+ls -a  		# 查看.git文件夹（Linux/Mac）；dir /a （Windowscmd）
+
+## 三、本地仓库核心操作（文件追踪-提交）
+git status  					# 查看文件状态：红色=未追踪，绿色=已暂存
+git add 文件名/文件夹名  		# 追踪单个文件/文件夹
+git add .  					# 追踪当前目录下所有未追踪/修改的文件
+git commit -m "提交说明"  		# 提交暂存区文件到本地仓库，说明要简洁明确
+# 提交说明规范：feat(模块): 功能描述，例：feat(git): 初始化本地仓库，添加Day08配置代码
+
+## 四、常用辅助命令
+git log  					# 查看提交记录，包含提交ID、作者、时间、提交说明
+git reset --soft 提交ID  		# 回滚到指定提交版本（保留文件修改）
+git rm --cached 文件名  	# 取消文件追踪（不删除本地文件）

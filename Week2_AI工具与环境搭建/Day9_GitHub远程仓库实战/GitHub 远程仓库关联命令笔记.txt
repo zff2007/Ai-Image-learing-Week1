@@ -1,0 +1,32 @@
+# GitHub远程仓库关联 核心命令笔记
+# 前提：已注册GitHub账号，创建公开远程仓库（无README/无.gitignore）
+
+## 一、GitHub远程仓库创建步骤（网页端）
+1. 打开GitHub官网，登录账号，点击右上角「+」→「New repository」
+2. 填写仓库名：Image-AI-Intern-Project（图片AI实习项目，英文规范）
+3. 仓库描述：4周冲刺图片AI开发助理/AI Agent实习项目，Python+CV+AI Agent
+4. 选择「Public」（公开），**不勾选** Add a README file / .gitignore
+5. 点击「Create repository」，生成远程仓库地址（HTTPS/SSH两种，推荐SSH）
+
+## 二、远程仓库关联（本地终端执行）
+# 方式1：HTTPS地址（无需配置密钥，简单，每次推送需验证账号）
+git remote add origin https://github.com/你的用户名/Image-AI-Intern-Project.git
+
+# 方式2：SSH地址（配置一次密钥，后续免验证）
+git remote add origin git@github.com:你的用户名/Image-AI-Intern-Project.git
+# 验证远程关联是否成功
+git remote -v  # 打印origin的拉取/推送地址，即为成功
+
+## 三、本地仓库推送到远程仓库（首次推送）
+git push -u origin main  # -u 绑定本地main分支与远程main分支，后续直接git push即可
+# 若推送时提示分支名问题，执行：git branch -M main （将默认master改为main）
+
+## 四、后续日常推送命令（关联后）
+git add .  # 追踪修改/新增文件
+git commit -m "提交说明"  # 提交到本地仓库
+git push  # 直接推送到远程origin/main分支
+
+## 五、常用远程操作命令
+git remote remove origin  # 解除本地与远程仓库的关联
+git pull origin main  # 拉取远程仓库最新代码到本地（多人协作时用）
+git clone 远程地址  # 将远程仓库克隆到本地（新设备使用）
