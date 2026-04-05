@@ -1,0 +1,167 @@
+预训练模型调用逻辑 + 自动化图片识别流程笔记
+
+一、预训练模型调用逻辑（核心：重点掌握调用流程）
+核心定位
+预训练模型是他人用海量数据集（如ImageNet）训练好的“通用视觉模型”，已具备提取图片边缘、纹理、物体结构等通用特征的能力，我们只需加载权重、适配自身任务，即可直接用于识别，无需从零训练。
+
+关键结构
+预训练模型 = 主干网络（负责特征提取） + 分类头（负责输出识别结果）
+
+完整调用步骤（以PyTorch+ResNet18为例）
+1. 加载预训练模型及权重：调用框架自带模型，指定预训练权重（weights=models.ResNet18_Weights.DEFAULT），加载后设置为评估模式（model.eval()），关闭训练相关的dropout、批量归一化，避免影响推理结果。
+ 	import torch
+	import torchvision.models as models
+# 加载ResNet18预训练模型，加载ImageNet训练的权重
+	model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+# 设置为评估模式，用于推理
+	model.eval()
+
+2. 修改分类头（适配自身任务）：预训练模型默认分类数（如ResNet18默认1000类）需替换为自己的任务类别数（如3类：猫/狗/鸟），核心是修改最后一层全连接层，保证输入维度与主干网络输出一致。
+# 获取主干网络输出的特征维度（分类头输入维度）
+	in_features = model.fc.in_features
+# 替换分类头，输出维度=自身任务类别数（此处以3类为例）
+	model.fc = torch.nn.Linear(in_features, 3)
+
+3. 配置推理环境：使用torch.no_grad()关闭梯度计算，节省资源，避免不必要的内存占用，确保推理高效。
+     # 关闭梯度计算，用于模型推理
+with torch.no_grad():
+    # 后续推理代码（如模型预测）放在此处
+
+注意事项
+- 必须加载预训练权重，否则模型参数随机初始化，无法实现有效识别。
+- 分类头的输出维度必须与自身任务类别数完全一致，否则会报错。
+- 推理前必须设置model.eval()，否则推理结果会出现偏差。
+
+二、自动化图片识别流程（核心：自动读取-自动预处理-自动识别-自动输出）
+
+整体逻辑：用Python循环+判断实现“批量处理闭环”，无需手动干预，自动完成从图片读取到结果输出的全流程，核心依托预训练模型，结合自动化编程基础（循环/判断）。
+步骤拆解（四大自动环节）
+
+1. 自动读取（感知环节：获取目标图片）
+
+核心：遍历指定文件夹，自动筛选图片文件，避免手动逐个加载。
+- 关键操作：用os.listdir()遍历文件夹，用if判断筛选图片格式（.jpg、.png、.jpeg），排除非图片文件。
+- 核心代码逻辑：遍历文件夹→拼接图片完整路径→过滤无效文件。
+import os
+# 指定图片文件夹路径
+image_dir = "test_images"
+# 遍历文件夹内所有文件
+for filename in os.listdir(image_dir):
+    # 筛选图片格式文件
+    if filename.endswith((".jpg", ".png", ".jpeg")):
+        # 拼接图片完整路径
+        img_path = os.path.join(image_dir, filename)
+
+- 目的：实现批量图片自动读取，解放手动操作，适配多图片场景。
+
+2. 自动预处理（准备环节：适配模型输入）
+
+核心：将读取的图片自动转换成模型可识别的格式，必须与预训练模型的训练时预处理流程一致，否则无法正确提取特征。
+
+- 固定流程：Resize（缩放至模型要求尺寸，如224×224）→ ToTensor（转成张量，归一化至[0,1]）→ Normalize（按预训练标准归一化，使用固定均值和标准差）→ unsqueeze(0)（添加batch维度，适配模型输入要求）。
+from torchvision import transforms
+from PIL import Image
+# 定义预处理流程（与ResNet18预训练流程一致）
+preprocess = transforms.Compose([
+    transforms.Resize((224, 224)),  # 缩放至224×224
+    transforms.ToTensor(),  # 转张量并归一化至[0,1]
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],  # 预训练标准均值
+                         std=[0.229, 0.224, 0.225])  # 预训练标准标准差
+])
+# 读取图片并执行预处理
+img = Image.open(img_path)
+img_tensor = preprocess(img).unsqueeze(0)  # 添加batch维度
+
+- 目的：统一图片格式，让模型能够正常接收并提取特征，避免因格式不符导致识别失败。
+
+3. 自动识别（核心环节：模型推理）
+
+核心：将预处理后的图片张量输入预训练模型，自动完成特征提取和类别预测，无需手动干预。
+
+- 关键操作：在torch.no_grad()环境下，调用模型输出推理结果，用torch.argmax()提取概率最大的类别（即识别结果）。
+ # 定义类别标签（与分类头输出维度对应）
+classes = ["猫", "狗", "鸟"]
+# 模型推理
+with torch.no_grad():   #临时关闭梯度计算
+    output = model(img_tensor)  # 输出各类别概率
+    pred_class = torch.argmax(output, dim=1).item()  # 提取概率最大的类别索引
+    result = classes[pred_class]  # 得到最终识别结果
+
+- 逻辑：模型主干网络自动提取图片特征→分类头将特征映射为各类别概率→筛选最大概率对应的类别。
+
+- 目的：自动完成图片识别，输出具体类别结果。
+
+4. 自动输出（执行环节：呈现/保存结果）
+
+核心：将自动识别的结果，以直观的方式输出（打印）或保存（分类存放图片、记录日志），完成自动化闭环。
+
+- 常见输出方式：① 打印识别结果（图片名称+识别类别）；② 按识别类别自动分类保存图片（如猫类存至cat_folder，狗类存至dog_folder）；③ 记录识别日志（方便后续查看）。
+
+- 关键操作：用os.makedirs()提前创建分类文件夹，用os.rename()或img.save()保存图片，用print()打印结果。
+        # 提前创建分类文件夹（避免报错）
+for cls in classes:
+    os.makedirs(cls, exist_ok=True)
+# 打印结果
+print(f" {filename} → 识别结果：{result}")
+# 按识别结果保存图片
+save_path = os.path.join(result, filename)
+img.save(save_path)
+
+- 目的：实现识别结果的自动呈现和留存，无需手动整理。
+
+自动化完整闭环总结
+
+自动读取（遍历筛选图片）→ 自动预处理（统一格式）→ 自动识别（模型推理）→ 自动输出（保存/打印结果），全程通过Python循环（批量处理）+ 判断（筛选文件、判断类别）实现“感知-执行”逻辑，无需手动干预，高效完成批量图片识别。
+
+完整自动化代码整合：
+import torch
+import torchvision.models as models
+from torchvision import transforms
+from PIL import Image
+import os
+
+# 1. 加载并配置预训练模型
+model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+in_features = model.fc.in_features
+model.fc = torch.nn.Linear(in_features, 3)  # 3类任务示例#分类头
+model.eval()
+
+# 2. 定义预处理流程
+preprocess = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# 3. 自动化流程执行
+image_dir = "test_images"
+classes = ["猫", "狗", "鸟"]
+
+# 创建分类文件夹
+for cls in classes:
+    os.makedirs(cls, exist_ok=True)
+
+# 批量处理图片
+with torch.no_grad():
+    for filename in os.listdir(image_dir):
+        if filename.endswith((".jpg", ".png", ".jpeg")):
+            img_path = os.path.join(image_dir, filename)
+            try:
+                # 自动读取+预处理
+                img = Image.open(img_path)
+                img_tensor = preprocess(img).unsqueeze(0)
+                # 自动识别
+                output = model(img_tensor)#实际打分
+                pred_class = torch.argmax(output, dim=1).item()#判断分类
+                result = classes[pred_class]#翻译名字
+                # 自动输出
+                print(f" {filename} → {result}")
+                save_path = os.path.join(result, filename)
+                img.save(save_path)
+            except Exception as e:
+                print(f" 处理{filename}失败：{e}")
+
+三、核心关联
+1. 预训练模型是自动化图片识别的“核心能力支撑”，解决“怎么识别”的问题；
+2. 自动化流程是预训练模型的“实际应用落地”，通过循环/判断，将模型调用逻辑批量应用到多张图片，实现高效自动化；
+3. 两者结合：预训练模型提供识别能力，自动化编程实现批量处理，缺一不可。
