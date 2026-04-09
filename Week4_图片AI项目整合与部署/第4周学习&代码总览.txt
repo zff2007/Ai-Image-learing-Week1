@@ -1,0 +1,7 @@
+图片AI开发助理_第4周代码库
+核心技能：Streamlit网页开发 + PyTorch/TensorFlow双模型 + MySQL数据存储 + 全场景AI Agent工具集成
+各Day核心产出：
+Day22：网页AI工具雏形脚本（单图识别+基础界面搭建）
+Day23：Streamlit深度集成脚本（双模型切换+批量识别+MySQL存储）
+Day24：全场景优化测试脚本（Bug修复+界面优化+Excel导出+稳定运行）
+ai_agent_optimized.py：第4周最终优化版AI Agent工具（无报错可直接运行）

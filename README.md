@@ -1,25 +1,27 @@
-# AI-Image-learning-week1
-图片AI开发助理实习 | 第1-3周代码库
+# AI-Image-learning-week1-4
+图片AI开发助理实习 | 第1-4周代码库
 
 ## 项目介绍
 本仓库是**图片AI开发助理预备实习**的全周期学习代码库，完整记录了从Python基础到AI开发环境搭建的入门路径，分为两大核心学习阶段：
 -  **第1周（Python+PIL基础阶段）**：夯实Python语法基础，掌握PIL图片处理与os文件路径操作，独立开发自动化图片数据集预处理工具，实现批量重命名、尺寸统一、格式转换等核心功能，为图片AI任务打下数据处理根基。
--  **第2周（AI工具与环境阶段）**：进阶学习代码版本管理（Git/GitHub）、数值计算（NumPy）、数据统计（Pandas）与深度学习框架（PyTorch CPU版），完成Linux基础命令实操，搭建起企业级AI开发所需的工程化环境，为后续模型训练与部署做好准备。
+-  **第2周（AI工具与环境阶段）**：进阶学习代码版本管理（Git/GitHub）、数值计算（NumPy）、数据统计（Pandas）与深度学习框架（PyTorch CPU版），搭建起企业级AI开发所需的工程化环境，为后续模型训练与部署做好准备。
 - **第3周（模型基础应用与全流程实战）**：聚焦图片AI核心实战，掌握数据增强、PyTorch数据加载、模型推理基础与全流程项目整合，完成从「数据预处理→模型加载→图片推理→结果可视化」的端到端图片AI小项目开发。
+- **第4周（网页版 AI Agent 成型）**：基于 Streamlit 搭建可视化网页工具，实现单张 / 批量图片上传、双模型自动识别、MySQL 数据存储、Excel 导出、异常自动处理，完成企业级自动化图片 AI Agent 工具开发与全功能测试。
 
-
-所有代码均为纯CPU环境运行，无复杂硬件依赖，完整覆盖了图片AI开发助理岗位所需的基础工程能力与工具链知识。
+所有代码均为纯 CPU 环境运行，无复杂硬件依赖，完整覆盖了图片 AI 开发助理岗位所需的基础工程能力、AI 模型应用、网页开发、数据库全栈技能。
 
 ## 技术栈
 - **编程语言**：Python 3
-- **图片处理库**：Pillow（PIL）、Albumentations（数据增强）
+- **图片处理库**：Pillow（PIL）、Albumentations（数据增强）、OpenCV
 - **文件系统库**：Python 内置 os 库
 - **版本控制**：Git + GitHub
 - **数值计算库**：NumPy
 - **数据处理库**：Pandas
 - **可视化库**：Matplotlib
-- **深度学习框架**：PyTorch（CPU版）、Torchvision（模型/数据加载）
-- **系统基础**：Linux 常用命令
+- **深度学习框架**：PyTorch（CPU版）、Torchvision（模型/数据加载）、TensorFlow/Keras
+- **网页框架**：Streamlit（AI Agent可视化界面）
+- **数据库**：MySQL（数据持久存储）
+- **工具模块**：异常处理、自动化识别、Excel导出
 
 ## 项目结构
 ```markdown
@@ -45,7 +47,14 @@ Ai-Image-learing-Week1-3/
 │  ├─ Day18_批量自动化识别与MySQL集成/   # 批量图片识别、MySQL 数据持久化
 │  ├─ Day19_识别结果可视化与Excel导出/   # 识别结果标注、Excel 报表自动导出
 │  ├─ Day20_自动化识别模块封装/          # 预处理→增强→推理→可视化全流程脚本封装
-│  └─ 第3周学习&代码总览.txt            # 第3周学习与代码产出汇总
+│  └─ 第3周学习&代码总览.txt             # 第3周学习与代码产出汇总
+├─ Week4_AI Agent网页成型/              # 第4周：Streamlit网页工具开发
+│  ├─ Day22_网页工具雏形开发/            # Streamlit基础、图片上传、自动识别
+│  ├─ Day23_Streamlit深度集成/          # MySQL查询、Excel导出、异常提示、双模型切换
+│  ├─ Day24_全场景优化与测试/            # 工具优化、坏图自动拦截、稳定运行
+│  ├─ day24_ai_agent_optimized.py       # 最终版AI Agent工具（可直接运行）
+│  └─ 第4周学习&代码总览.txt             # 第4周学习与代码产出汇总
+├─ 演示截图/                            # 功能演示截图
 ├─ README.md                           # 项目总览文档
 └─ 第1周学习&代码总览.txt               # 第1周学习与代码产出汇总
 
@@ -62,7 +71,6 @@ Ai-Image-learing-Week1-3/
 - 图片数值处理：基于 NumPy 实现图片与三维像素数组的转换，掌握数组切片与运算；
 - 数据集统计：通过 Pandas 读取图片信息表格，完成数据集数量、格式、尺寸等关键信息统计；
 - 深度学习环境验证：搭建 CPU 版 PyTorch 环境，验证库导入与版本信息，加载 ResNet18 预训练模型并解析结构；
-- Linux 基础操作：掌握文件 / 目录管理、终端运行 Python 脚本等核心命令，适配企业服务器开发场景。
 
 ### 第 3 周：图片AI核心开发与全流程实战
 - 双框架预训练模型调用：基于 PyTorch ResNet18、TensorFlow MobileNetV2 实现单图分类推理，解析预测类别与置信度
@@ -71,6 +79,25 @@ Ai-Image-learing-Week1-3/
 - MySQL 数据持久化：将识别结果（图片路径、标签、置信度）存入数据库，实现数据永久存储
 - 结果可视化与导出：格式化打印识别结果，支持将 MySQL 数据一键导出为 Excel 报表
 - 模块化全流程整合：按功能拆分模块、优化冗余代码、完善注释，封装可复用的自动化图片AI识别模块
+
+### 第 4 周：网页版 AI Agent 工具
+- Streamlit 网页可视化：零前端基础搭建专业 AI 工具界面，操作简单易上手
+- 单张 / 批量图片上传：支持 JPG/PNG 格式，自动格式检测
+- 双模型自由切换：PyTorch (ResNet18) + TensorFlow (MobileNetV2) 一键切换
+- 自动化识别流程：上传→预处理→推理→标注→存储全自动化
+- MySQL 数据库集成：自动创建库表，识别记录永久存储
+- 历史记录查询 + Excel 导出：一键查询所有记录，导出报表存档
+- 全场景异常处理：坏图 / 损坏文件自动拦截，程序不崩溃
+
+## 📸 功能演示截图（Day25 完成补充）
+| 功能 | 截图 |
+|------|------|
+| 🔹 工具主界面 | ![主界面](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/01_home.png) |
+| 🔹 单张图片识别+可视化标注 | ![单张识别](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/02_single.png) |
+| 🔹 批量图片自动化识别 | ![批量识别](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/03_batch.png) |
+| 🔹 历史记录查询（MySQL） | ![历史记录](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/04_history.png) |
+| 🔹 Excel 报表导出 | ![导出Excel](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/05_excel.png) |
+
 
 ##  快速运行
 1. 安装依赖：
@@ -115,6 +142,23 @@ pip install pillow
 | Day19	| 识别结果可视化展示、格式化输出优化、Excel 数据一键导出 |
 | Day20	| 全流程代码模块化封装、代码优化复盘、可复用 AI 识别模块整合 |
 
+---
+
+### 第4周：网页版 AI Agent 成型
+| 天数 | 核心学习内容 |
+|------|--------------|
+|Day22|	Streamlit 进阶、图片展示 / 结果输出、数据库按钮、网页工具雏形开发 |
+|Day23|	Streamlit 深度集成、MySQL 查询 / Excel 导出 / 异常提示、AI Agent 优化 |
+|Day24|	全场景功能测试、工具体验优化、程序稳定性提升 |
+|Day25| 高质量 GitHub README 编写、代码归档整理、演示截图补充、项目完善 |
+
+##  项目亮点
+- **纯 CPU 运行**：无硬件门槛，适配所有学习 / 实习环境
+- **双框架兼容**：PyTorch + TensorFlow 企业主流技术栈
+- **自动化 AI Agent**：全流程无人值守，符合企业 AI 工具需求
+- **网页可视化**：Streamlit 零前端开发，专业交互界面
+- **数据持久化**：MySQL+Excel 双存储，满足数据管理需求
+- **全周期学习**：从基础到成型，完整覆盖实习岗位技能
 
 ##  作者
 - **实习方向**：图片 AI 开发助理
