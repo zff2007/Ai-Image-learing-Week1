@@ -12,14 +12,14 @@ import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
 from datetime import datetime
-import warnings #新增：屏蔽无用警告
+import warnings #屏蔽无用警告
 warnings.filterwarnings("ignore")
 
-#============================= Day24 基础配置（优化版）=============================
+#============================= 基础配置=============================
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "Zmh.2007.0103",  
+    "password": "你的密码",  
     "charset": "utf8mb4"
 }
 DB_NAME = "ai_image_recognize"
@@ -28,7 +28,7 @@ DEVICE = torch.device("cpu")
 CAT_IDX = list(range(281, 286))
 DOG_IDX = list(range(151, 269))
 
-#============================= 缓存模型（Day24 优化加载速度）=============================
+#============================= 缓存模型=============================
 @st.cache_resource(show_spinner="模型加载中...")    #优化：加加载提示
 def load_pytorch_model():
     model = models.resnet18(weights=ResNet18_Weights.DEFAULT)
@@ -51,7 +51,7 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])
 ])
 
-#=========================== 双模型识别（Day24 强化异常处理）===========================
+#=========================== 双模型识别（强化异常处理）===========================
 def predict_by_pytorch(img_pil):
     try:
         img = img_pil.convert("RGB").resize((224,224))  #修改：强制统一尺寸
@@ -92,14 +92,14 @@ def predict_by_tensorflow(img_pil):
     except:
         return None, None
 
-#=============================== 可视化标注（Day24 优化）=====================
+#=============================== 可视化标注=====================
 def visualize_img(img_pil, label, conf):
     img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
     cv2.putText(img, f"Result: {label}", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0,255,0), 2)
     cv2.putText(img, f"Conf: {conf}%", (20, 80), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255,0,0), 2)
     return Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
-#========================== MySQL 初始化（Day24 修复bug）======================
+#========================== MySQL ======================
 def init_db():
     try:
         db = pymysql.connect(**DB_CONFIG)
@@ -124,7 +124,7 @@ def init_db():
     except Exception as e:
         st.error(f"数据库连接失败：{str(e)}")
 
-#======================== 保存/查询/导出（Day24 稳定版）===================
+#======================== 保存/查询/导出===================
 def save_record(filename, result, conf, model):
     try:
         db = pymysql.connect(**DB_CONFIG, database=DB_NAME)
@@ -166,7 +166,7 @@ def main():
         st.divider()
         model_choice = st.selectbox("选择识别模型", ["PyTorch(ResNet18)", "TensorFlow(MobileNetV2)"])
         st.divider()
-        st.info("Day24 优化版\n支持：JPG/PNG\n自动拦截损坏文件\n批量稳定识别")
+        st.info("Day24 优化版\n支持:JPG/PNG\n自动拦截损坏文件\n批量稳定识别")
 
     # 侧边栏 
     st.title("🐱🐶 双模型AI图像识别工具")    
@@ -202,7 +202,7 @@ def main():
                             res_img = visualize_img(img, res, conf)
                             save_record(uploaded_file.name, res, conf, use_model)
 
-                            st.success(f"识别完成：{res}（{conf}%）")
+                            st.success(f"识别完成：{res}({conf}%)")
                             col1, col2 = st.columns(2)
                             with col1:
                                 st.image(res_img, caption="识别结果", use_column_width=True)
@@ -269,7 +269,7 @@ def main():
 
     # 历史记录
     elif option == "历史记录":
-        st.subheader("MySQL查询 | Excel导出")   #修改：更贴合功能
+        st.subheader("MySQL查询 | Excel导出")   
         if st.button("🔍 查询所有记录", type="primary", use_container_width=True):
             df = get_all_records()
             if df.empty:

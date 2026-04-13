@@ -52,10 +52,12 @@ Ai-Image-learing-Week1-3/
 │  ├─ Day22_网页工具雏形开发/            # Streamlit基础、图片上传、自动识别
 │  ├─ Day23_Streamlit深度集成/          # MySQL查询、Excel导出、异常提示、双模型切换
 │  ├─ Day24_全场景优化与测试/            # 工具优化、坏图自动拦截、稳定运行
-│  ├─ day24_ai_agent_optimized.py       # 最终版AI Agent工具（可直接运行）
+│  ├─ ai_agent_optimized.py       # 最终版AI Agent工具（可直接运行）
 │  └─ 第4周学习&代码总览.txt             # 第4周学习与代码产出汇总
 ├─ 演示截图/                            # 功能演示截图
 ├─ README.md                           # 项目总览文档
+├─ requirements.txt                    # 项目依赖
+├─ .env                           # 环境变量配置
 └─ 第1周学习&代码总览.txt               # 第1周学习与代码产出汇总
 
 
@@ -89,24 +91,99 @@ Ai-Image-learing-Week1-3/
 - 历史记录查询 + Excel 导出：一键查询所有记录，导出报表存档
 - 全场景异常处理：坏图 / 损坏文件自动拦截，程序不崩溃
 
-## 📸 功能演示截图（Day25 完成补充）
+## 📸 功能演示截图
 | 功能 | 截图 |
 |------|------|
-| 🔹 工具主界面 | ![主界面](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/01_home.png) |
-| 🔹 单张图片识别+可视化标注 | ![单张识别](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/02_single.png) |
-| 🔹 批量图片自动化识别 | ![批量识别](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/03_batch.png) |
-| 🔹 历史记录查询（MySQL） | ![历史记录](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/04_history.png) |
-| 🔹 Excel 报表导出 | ![导出Excel](https://raw.githubusercontent.com/zff2007/Ai-Image-learing-week1/main/演示截图/05_excel.png) |
+| 🔹 工具主界面 | ![主界面](https://raw.githubusercontent.com/zff2007/AI-Image-learning-week1/main/演示截图/01_home.png) |
+| 🔹 单张图片识别+可视化标注 | ![单张识别](https://raw.githubusercontent.com/zff2007/AI-Image-learning-week1/main/演示截图/02_single.png) |
+| 🔹 批量图片自动化识别 | ![批量识别](https://raw.githubusercontent.com/zff2007/AI-Image-learning-week1/main/演示截图/03_batch.png) |
+| 🔹 历史记录查询（MySQL） | ![历史记录](https://raw.githubusercontent.com/zff2007/AI-Image-learning-week1/main/演示截图/04_history.png) |
+| 🔹 Excel 报表导出 | ![导出Excel](https://raw.githubusercontent.com/zff2007/AI-Image-learning-week1/main/演示截图/05_excel.png)
 
+## 环境配置文件
+1. requirements.txt(项目依赖)
+```txt
+# 基础图片处理
+Pillow>=10.0.1
+opencv-python>=4.8.1.78
+albumentations>=1.3.1
+# 数值计算与数据处理
+numpy>=1.24.3
+pandas>=2.0.3
+openpyxl>=3.1.2
+# 深度学习框架（CPU版）
+torch>=2.0.1+cpu
+torchvision>=0.15.2+cpu
+tensorflow>=2.13.0
+# 网页开发
+streamlit>=1.27.2
+# 数据库连接
+mysql-connector-python>=8.2.0
+# 可视化
+matplotlib>=3.7.2
+# 环境变量加载
+python-dotenv>=1.0.0
+```
+2. .env(环境变量配置)
+```env
+# MySQL 数据库配置
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_USER=root
+MYSQL_PASSWORD=your_password
+MYSQL_DB=ai_image_recognition
 
+# 模型配置
+DEFAULT_MODEL=pytorch
+IMAGE_SIZE=224
+CONFIDENCE_THRESHOLD=0.5
+
+# 路径配置
+UPLOAD_FOLDER=./uploaded_images
+OUTPUT_FOLDER=./output_results
+```
 ##  快速运行
 1. 安装依赖：
 ```bash
-pip install pillow
+pip install -r requirements.txt
 ```
-2. 进入对应日期文件夹，运行目标脚本
-3. 若涉及本地图片路径，修改代码中路径为本地有效路径后运行，查看处理 / 验证结果。
+2. 配置 .env 文件，修改 MySQL 密码为本地密码
+3. 入对应日期文件夹，运行目标脚本
+4. 若涉及本地图片路径，修改代码中路径为本地有效路径后运行
 
+## 完整使用指南
+### 1.环境安装
+```bash
+# 一键安装所有依赖
+pip install -r requirements.txt
+
+# PyTorch CPU 专属安装（若自动安装失败）
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# TensorFlow CPU 专属安装（若自动安装失败）
+pip install tensorflow-cpu>=2.13.0
+```
+### 2.数据库配置
+1. 本地安装 MySQL 并启动服务
+2. 修改 .env 中 MYSQL_PASSWORD 为你的 MySQL 密码
+3. 脚本运行时会自动创建数据库与表，无需手动建库
+### 3.脚本运行
+- 基础图片处理：进入对应 Day 文件夹，直接运行 Python 脚本
+- 模型推理：运行 Week3 对应脚本，支持单图 / 批量识别
+- 网页 AI Agent：进入 Week4，运行最终版脚本
+```bash
+# 启动网页版 AI Agent
+streamlit run ai_agent_optimized.py
+```
+### 4.环境变量加载（代码示例）
+```python
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+mysql_host = os.getenv("MYSQL_HOST")
+mysql_password = os.getenv("MYSQL_PASSWORD")
+```
 ## 学习历程
 ### 第1周：Python+PIL图片处理基础
 | 天数 | 核心学习内容 |
